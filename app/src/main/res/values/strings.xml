@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Withings SDK Sample</string>
+    <string name="noInternet">No internet</string>
+    <string name="ok">ok</string>
+</resources>
