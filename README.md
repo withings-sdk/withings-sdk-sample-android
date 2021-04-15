@@ -1,7 +1,6 @@
 # Withings Android SDK Sample
 
-> This is to illustrate how to integrate the Withings SDK to your Android App
-
+> The snippets on this page show a simple, light-touch integration of the Withings SDK to your Android App
 
 # Android Withings SDK 
 
@@ -10,9 +9,9 @@
 - Android 7
 - Androidx
 
-## Installation
+## Add the Withings SDK dependencies
 
-Add the dependency to your project:
+Add the dependency to your **build.gradle**:
 
 ```grouvy
 repositories {
@@ -28,9 +27,9 @@ dependencies {
 }
 ```
 
-## Usage
+## Add the library permissions
 
-For starters, you will need some application permissions for the library to work.
+You will need some application permissions for the library to work.
 
 ```xml
 <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -39,13 +38,15 @@ For starters, you will need some application permissions for the library to work
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 
-?> **Important**: The Withings SDK will not ask the user to turn ON the Bluetooth, it's your responsibility to explain the user why you need them to turn on the Bluetooth and turn it on before launching the SDK.
+?> **Important**: The Withings SDK will not require the user to turn ON the Bluetooth. It is recommended that your app ask the user to turn on Bluetooth.
 
-?> **Important**: The Withings SDK will ask the user the location permission to enable BLE scan if the app has not. It's highly recommended that you do it before hand with the right explanation screen.
+?> **Important**: The Withings SDK will ask the user the location permission to enable BLE scan if the app has not. It is recommended that your app ask the user to enable location permission to provide the right level of information. For more information, please [refer here](http://developer.withings.com/sdk/#/?id=connectivity-and-permissions).
 
-There is only two things to implement the Withings SDK:
+## Initialize the Withings SDK
 
-1. Add a [WithingsFragment](WithingsFragment) to your `Activity` and load your redirection URL for install or settings.
+Please follow the following steps to implement the Withings SDK:
+
+1. Add a [WithingsFragment](https://developer.withings.com/sdk/#/android/WithingsFragment) to your `Activity` and load your redirection URL for install or settings.
 
 ```kotlin
 WithingsFragment.newInstance(myInstallUrl)
@@ -57,7 +58,7 @@ WithingsFragment.newInstance(myDevicesUrl, accessToken)
 - `setCloseIntentListener(...)`
 - `setNotificationListener(...)`
 
-3. (Optional) If you want the SDK to look for device to synchronize, you can use the [WithingsSyncService](WithingsSyncService).
+3. (Optional) If you want the SDK to look for device to synchronize, you can use the [WithingsSyncService](https://developer.withings.com/sdk/#/android/WithingsSyncService).
 
 In your own implementation of the `android.app.Application` you con call : 
 
