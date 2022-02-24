@@ -12,7 +12,6 @@ class SampleApplication : Application() {
         // You may find them thanks to public api : /v2/user?action=getdevice
         val deviceIdentity = WithingsDeviceIdentity(
             id = "00:24:e4:00:00:00",
-            name = "Move 00",
             advertisingKey = "advertisingKeyOfDevice"
         )
         // Know that if you start without (background) location permission, the service will never synchronize your devices
