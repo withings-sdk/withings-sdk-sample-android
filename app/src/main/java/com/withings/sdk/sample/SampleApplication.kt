@@ -15,6 +15,8 @@ class SampleApplication : Application() {
             advertisingKey = "advertisingKeyOfDevice"
         )
         // Know that if you start without (background) location permission, the service will never synchronize your devices
-        WithingsSyncService.get(this).start(listOf(deviceIdentity))
+        val syncService = WithingsSyncService.get(this)
+        syncService.start(listOf(deviceIdentity))
+        syncService.setListener(WithingsSyncListener())
     }
 }

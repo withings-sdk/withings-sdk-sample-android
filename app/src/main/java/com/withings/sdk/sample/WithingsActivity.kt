@@ -61,17 +61,29 @@ class WithingsActivity : AppCompatActivity() {
     private fun showWithingsFragment() {
         supportFragmentManager.beginTransaction().replace(R.id.content, fragment).commitAllowingStateLoss()
         fragment.setCloseIntentListener { finish() }
-        fragment.setNotificationListener { type, parameters ->
-            val status = ReturnStatus.get(type)
-            if (status in ReturnStatus.getClosingCodes) {
-                finish()
-            }
-            if (status in ReturnStatus.getSuccessInstallCodes) {
-                Toast.makeText(this, "Installation Successful", Toast.LENGTH_LONG).show()
-            } else {
-                val toastText = "type : $type\n" + parameters.entries.joinToString("\n") { "${it.key} : ${it.value}" }
-                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show()
-            }
+        fragment.setNotificationListener { type, parameters -> onWithingsSdkNotification(type, parameters)}
+    }
+
+    private fun onWithingsSdkNotification(type: Int, parameters: Map<String, String>) {
+        val withingsSdkNotification = WithingsSdkNotification.parse(type, parameters)
+        if (withingsSdkNotification != null) {
+            onWithingsSdkNotification(withingsSdkNotification)
+        } else {
+            val toastText = "type : $type\n" + parameters.entries.joinToString("\n") { "${it.key} : ${it.value}" }
+            Toast.makeText(this, toastText, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun onWithingsSdkNotification(withingsSdkNotification: WithingsSdkNotification) {
+        if (withingsSdkNotification is WithingsSdkNotification.InstallationSuccess) {
+            finish()
+        }
+        if (withingsSdkNotification is WithingsSdkNotification.InstallationSuccess
+            || withingsSdkNotification is WithingsSdkNotification.InstallationFromSettingsSuccess) {
+            Toast.makeText(this, "Installation Successful", Toast.LENGTH_LONG).show()
+        } else {
+            val toastText = withingsSdkNotification.javaClass.simpleName
+            Toast.makeText(this, toastText, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -101,28 +113,5 @@ class WithingsActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-}
-
-@Suppress("MagicNumber")
-private enum class ReturnStatus(val code: Int) {
-    INSTALL_SUCCESS(1),
-    INSTALL_FAILURE(2),
-    ACCOUNT_ERROR(3),
-    SETTINGS_INSTALL_SUCCESS(4),
-    SETTINGS_INSTALL_FAILURE(5),
-    DISSOCIATION_SUCCESS(6),
-    DISSOCIATION_FAILURE(7),
-    UPDATE_WIFI_SUCCESS(8),
-    UPDATE_WIFI_FAILURE(9),
-    LOGIN_SUCCESS(10),
-    LOGIN_FAILURE(11);
-
-    companion object {
-        fun get(code: Int): ReturnStatus? = values().find { code == it.code }
-
-        val getClosingCodes = listOf(INSTALL_SUCCESS, LOGIN_SUCCESS)
-
-        val getSuccessInstallCodes = listOf(INSTALL_SUCCESS, SETTINGS_INSTALL_SUCCESS)
     }
 }
